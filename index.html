@@ -9,11 +9,15 @@
         grid-template-columns: 1fr 80px 1fr;
         grid-template-rows: 1fr 80px 1fr;
         grid-template-areas: 'green . red' '. start .' 'yellow . blue';
+        background: #444;
+        padding: 2em;
+        border-radius: 100%;
       }
 
       .color {
         filter: brightness(0.6);
         transition: filter 400px;
+        border: none;
       }
 
       .color:active {
@@ -23,21 +27,25 @@
       #green {
         background: green;
         grid-area: green;
+        border-top-left-radius: 100%;
       }
 
       #red {
         background: red;
         grid-area: red;
+        border-top-right-radius: 100%;
       }
 
       #yellow {
         background: yellow;
         grid-area: yellow;
+        border-bottom-left-radius: 100%;
       }
 
       #blue {
         background: blue;
         grid-area: blue;
+        border-bottom-right-radius: 100%;
       }
 
       #start {
@@ -72,7 +80,7 @@
 
       window.addEventListener('DOMContentLoaded', () => {
         Array.from(document.querySelectorAll('[data-frequency]')).forEach(btn => {
-          btn.addEventListener('click', event => {
+          btn.addEventListener('mousedown', event => {
             playTone({frequency: event.target.dataset.frequency});
           });
         });
