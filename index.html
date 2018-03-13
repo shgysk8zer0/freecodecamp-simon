@@ -4,18 +4,15 @@
     <meta charset="utf-8" />
     <title>Simon&reg;</title>
     <style>
-      @import url("https://shgysk8zer0.github.io/css/--color-size/class-rules.css");
-      @import url("https://shgysk8zer0.github.io/css/--color-size/element.css");
+      @import url("https://shgysk8zer0.github.io/css/core-css/class-rules.css");
+      @import url("https://shgysk8zer0.github.io/css/core-css/element.css");
       :root {
         --controls-size: 31vmin;
         --color-size: 1fr;
         --game-size: 50vmin;
         --gamepad-background: #444;
-        box-sizing: border-box;
-      }
-
-      * {
-        box-sizing: inherit;
+        --button-border: none;
+        --button-active-border: none;
       }
 
       main {
@@ -79,6 +76,11 @@
         z-index: 2;
         transform: translate(calc(var(--controls-size) / -2), calc(var(--controls-size) / -2));
         border: 10px solid var(--gamepad-background);
+        max-width: var(--controls-size);
+      }
+
+      #pad > * {
+        margin-top: 12px;
       }
 
       #controls {
@@ -86,6 +88,10 @@
         flex-wrap: wrap;
         align-items: center;
         justify-content: center;
+      }
+
+      #controls > * {
+        margin: 6px;
       }
 
       #pad .branding {
@@ -110,7 +116,8 @@
       }
 
       #power {
-        display: inline-block;
+        align-items: center;
+        justify-content: center;
       }
 
       #switch {
@@ -205,7 +212,7 @@
             <span>Reset</span>
           </div>
         </div>
-        <div id="power" class="clearfix">
+        <div id="power" class="clearfix flex row">
           <span class="inline-block float-left">Off</span>
           <button id="switch" class="inline-block float-left">
             <span></span>
