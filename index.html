@@ -1,23 +1,45 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="utf-8" />
+    <title>Simon&reg;</title>
     <style>
+      @import url("https://shgysk8zer0.github.io/css/--color-size/class-rules.css");
+      @import url("https://shgysk8zer0.github.io/css/--color-size/element.css");
+      :root {
+        --controls-size: 31vmin;
+        --color-size: 1fr;
+        --game-size: 50vmin;
+        --gamepad-background: #444;
+        box-sizing: border-box;
+      }
+
+      * {
+        box-sizing: inherit;
+      }
+
       main {
-        height: 50vmin;
-        width: 50vmin;
+        height: var(--game-size);
+        width: var(--game-size);
         display: grid;
-        grid-template-columns: 1fr 80px 1fr;
-        grid-template-rows: 1fr 80px 1fr;
-        grid-template-areas: 'green . red' '. start .' 'yellow . blue';
-        background: #444;
-        padding: 2em;
+        grid-template-columns: var(--color-size) 0 var(--color-size);
+        grid-template-rows: var(--color-size) 0 var(--color-size);
+        grid-gap: 10px;
+        grid-template-areas: 'green . red' '. pad .' 'yellow . blue';
+        background: var(--gamepad-background);
         border-radius: 100%;
+        border: 20px solid var(--gamepad-background);
+      }
+
+      button {
+        border: none;
       }
 
       .color {
         filter: brightness(0.6);
-        transition: filter 400px;
+        transition: filter 400;
         border: none;
+        z-index: 1;
       }
 
       .color:active {
@@ -48,11 +70,84 @@
         border-bottom-right-radius: 100%;
       }
 
+      #pad {
+        grid-area: pad;
+        background: white;
+        width: var(--controls-size);
+        height: var(--controls-size);
+        border-radius: 50%;
+        z-index: 2;
+        transform: translate(calc(var(--controls-size) / -2), calc(var(--controls-size) / -2));
+        border: 10px solid var(--gamepad-background);
+      }
+
+      #controls {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+      }
+
+      #pad .branding {
+        flex-basis: 100%;
+        text-align: center;
+      }
+
       #start {
-        grid-area: start;
+        background: red;
+      }
+
+      #strict {
+        background: yellow;
+      }
+
+      #counter {
+        display: inline-block;
+        width: 45px;
+        height: 40px;
+        border-radius: 4px;
+        background: #454545;
+      }
+
+      #power {
+        display: inline-block;
+      }
+
+      #switch {
+        background: var(--gamepad-background);
+        height: 2em;
+        width: 60px;
+        display: flex;
+        flex-direction: row;
+      }
+
+      #switch > * {
+        height: inherit;
+        display: inline-block;
+        flex-basis: 50%;
+        flex-shrink: 1;
+        padding: 3px;
+      }
+
+      #switch.on > :last-child {
+        background: blue;
+      }
+
+      #switch:not(.on) > :first-child {
+        background: blue;
+      }
+
+      .control {
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        margin: 10px;
+        box-shadow: 0 0 4px 4px rgba(0,0,0,0.8);
       }
     </style>
-    <script>
+    <script type="module">
+      import {$, ready} from 'https://shgysk8zer0.github.io/js/std-js/functions.js';
+
       async function playTone({
           frequency = 440,
           duration = 200,
@@ -78,21 +173,47 @@
         });
       }
 
-      window.addEventListener('DOMContentLoaded', () => {
-        Array.from(document.querySelectorAll('[data-frequency]')).forEach(btn => {
-          btn.addEventListener('mousedown', event => {
-            playTone({frequency: event.target.dataset.frequency});
-          });
+      ready().then(() => {
+        $('[data-frequency]').mousedown(event => {
+          playTone({frequency: event.target.dataset.frequency});
         });
-      }, {once: true});
+        $('#switch').click(event => event.target.classList.toggle('on'));
+      });
 
     </script>
   </head>
-  <body>
+  <body class="border-box">
     <main>
       <button id="green" class="color" data-frequency="300"></button>
       <button id="red" class="color" data-frequency="400"></button>
-      <button id="start"> Start</button>
+      <div id="pad">
+        <h2 class="branding">Simon<sup>&reg;</sup></h2>
+        <div id="controls">
+          <div class="inline-block">
+            <div id="counter"></div>
+            <br />
+            <span>Count</span>
+          </div>
+          <div class="inline-block">
+            <button id="start" class="control"></button>
+            <br />
+            <span>Start</span>
+          </div>
+          <div class="inline-block">
+            <button id="strict" class="control"></button>
+            <br />
+            <span>Reset</span>
+          </div>
+        </div>
+        <div id="power" class="clearfix">
+          <span class="inline-block float-left">Off</span>
+          <button id="switch" class="inline-block float-left">
+            <span></span>
+            <span></span>
+          </button>
+          <span class="inline-block float-left">On</span>
+        </div>
+      </div>
       <button id="yellow"class="color"data-frequency="500"></button>
       <button id="blue" class="color"data-frequency="600"></button>
     </main>
