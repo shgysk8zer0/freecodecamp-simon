@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      main {
+        height: 50vmin;
+        width: 50vmin;
+        display: grid;
+        grid-template-columns: 1fr 80px 1fr;
+        grid-template-rows: 1fr 80px 1fr;
+        grid-template-areas: 'green . red' '. start .' 'yellow . blue';
+      }
+
+      .color {
+        filter: brightness(0.6);
+        transition: filter 400px;
+      }
+
+      .color:active {
+        filter: brightness(1.5);
+      }
+
+      #green {
+        background: green;
+        grid-area: green;
+      }
+
+      #red {
+        background: red;
+        grid-area: red;
+      }
+
+      #yellow {
+        background: yellow;
+        grid-area: yellow;
+      }
+
+      #blue {
+        background: blue;
+        grid-area: blue;
+      }
+
+      #start {
+        grid-area: start;
+      }
+    </style>
+    <script>
+      async function playTone({
+          frequency = 440,
+          duration = 200,
+          type = 'sine',
+        } = {}) {
+        return await new Promise((resolve, reject) => {
+          try {
+            // create web audio api context
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+            // create Oscillator node
+            const oscillator = audioCtx.createOscillator();
+
+            oscillator.type = type;
+            oscillator.frequency.setValueAtTime(frequency, audioCtx.currentTime); // value in hertz
+            oscillator.connect(audioCtx.destination);
+            oscillator.start();
+            setTimeout(() => oscillator.stop(), duration);
+            oscillator.addEventListener('ended', event => resolve(event));
+          } catch (error) {
+            reject(error);
+          }
+        });
+      }
+
+      window.addEventListener('DOMContentLoaded', () => {
+        Array.from(document.querySelectorAll('[data-frequency]')).forEach(btn => {
+          btn.addEventListener('click', event => {
+            playTone({frequency: event.target.dataset.frequency});
+          });
+        });
+      }, {once: true});
+
+    </script>
+  </head>
+  <body>
+    <main>
+      <button id="green" class="color" data-frequency="300"></button>
+      <button id="red" class="color" data-frequency="400"></button>
+      <button id="start"> Start</button>
+      <button id="yellow"class="color"data-frequency="500"></button>
+      <button id="blue" class="color"data-frequency="600"></button>
+    </main>
+  </body>
+</html>
